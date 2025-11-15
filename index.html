@@ -4,10 +4,9 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ADHD PM Task Tracker</title>
+    <title>Projects & Tasks Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://apis.google.com/js/api.js"></script>
-    <script src="https://accounts.google.com/gsi/client" async></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     <style>
       /* Custom scrollbar for a cleaner look */
       ::-webkit-scrollbar {
@@ -31,13 +30,23 @@
       .animate-fade-in {
         animation: fadeIn 0.3s ease-out forwards;
       }
+      /* Fix for browser autofill background and text color */
+      input:-webkit-autofill,
+      input:-webkit-autofill:hover,
+      input:-webkit-autofill:focus,
+      input:-webkit-autofill:active {
+          -webkit-box-shadow: 0 0 0 30px #1e293b inset !important; /* Corresponds to bg-slate-800 */
+          box-shadow: 0 0 0 30px #1e293b inset !important; /* Corresponds to bg-slate-800 */
+          -webkit-text-fill-color: #ffffff !important; /* Corresponds to text-white */
+      }
     </style>
   <script type="importmap">
 {
   "imports": {
     "react": "https://aistudiocdn.com/react@^19.2.0",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/"
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "@supabase/supabase-js": "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm"
   }
 }
 </script>

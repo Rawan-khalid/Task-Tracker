@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { Task, FollowUp, Document, TaskStatus } from '../types';
 import { Icon } from './Icons';
@@ -54,8 +53,8 @@ export const TaskDetail: React.FC<TaskDetailProps> = ({ task, onUpdateTask, onDe
     }
   };
 
-  const handleDateChange = (field: 'createdAt' | 'closedAt', value: string) => {
-    const newDate = new Date(value).toISOString();
+  const handleDateChange = (field: 'created_at' | 'closed_at', value: string) => {
+    const newDate = value ? new Date(value).toISOString() : undefined;
     onUpdateTask({ ...task, [field]: newDate });
   };
 
@@ -67,21 +66,21 @@ export const TaskDetail: React.FC<TaskDetailProps> = ({ task, onUpdateTask, onDe
         text: newFollowUp.trim(),
         completed: false,
       };
-      onUpdateTask({ ...task, followUps: [...task.followUps, followUp] });
+      onUpdateTask({ ...task, follow_ups: [...task.follow_ups, followUp] });
       setNewFollowUp('');
     }
   };
 
   const handleToggleFollowUp = (id: string) => {
-    const updatedFollowUps = task.followUps.map(f =>
+    const updatedFollowUps = task.follow_ups.map(f =>
       f.id === id ? { ...f, completed: !f.completed } : f
     );
-    onUpdateTask({ ...task, followUps: updatedFollowUps });
+    onUpdateTask({ ...task, follow_ups: updatedFollowUps });
   };
 
   const handleDeleteFollowUp = (id: string) => {
-    const updatedFollowUps = task.followUps.filter(f => f.id !== id);
-    onUpdateTask({ ...task, followUps: updatedFollowUps });
+    const updatedFollowUps = task.follow_ups.filter(f => f.id !== id);
+    onUpdateTask({ ...task, follow_ups: updatedFollowUps });
   };
 
   const handleAddDocument = (e: React.FormEvent) => {
@@ -115,9 +114,9 @@ export const TaskDetail: React.FC<TaskDetailProps> = ({ task, onUpdateTask, onDe
 
 
   const timeTaken = () => {
-    if (!task.closedAt) return 'In progress';
-    const start = new Date(task.createdAt).getTime();
-    const end = new Date(task.closedAt).getTime();
+    if (!task.closed_at) return 'In progress';
+    const start = new Date(task.created_at).getTime();
+    const end = new Date(task.closed_at).getTime();
     const diff = end - start;
     if (diff < 0) return 'Invalid dates';
 
@@ -133,7 +132,7 @@ export const TaskDetail: React.FC<TaskDetailProps> = ({ task, onUpdateTask, onDe
     setShowDeleteConfirm(false);
   };
   
-  const incompleteFollowUpsCount = task.followUps.filter(f => !f.completed).length;
+  const incompleteFollowUpsCount = task.follow_ups.filter(f => !f.completed).length;
 
   if (!task) {
     return (
@@ -194,8 +193,8 @@ export const TaskDetail: React.FC<TaskDetailProps> = ({ task, onUpdateTask, onDe
             </label>
             <input
               type="datetime-local"
-              value={toDateTimeLocal(task.createdAt)}
-              onChange={e => handleDateChange('createdAt', e.target.value)}
+              value={toDateTimeLocal(task.created_at)}
+              onChange={e => handleDateChange('created_at', e.target.value)}
               className="w-full p-2 border bg-white border-slate-200 rounded-lg"
             />
           </div>
@@ -205,8 +204,8 @@ export const TaskDetail: React.FC<TaskDetailProps> = ({ task, onUpdateTask, onDe
             </label>
             <input
               type="datetime-local"
-              value={toDateTimeLocal(task.closedAt)}
-              onChange={e => handleDateChange('closedAt', e.target.value)}
+              value={toDateTimeLocal(task.closed_at)}
+              onChange={e => handleDateChange('closed_at', e.target.value)}
               className="w-full p-2 border bg-white border-slate-200 rounded-lg"
             />
           </div>
@@ -233,7 +232,7 @@ export const TaskDetail: React.FC<TaskDetailProps> = ({ task, onUpdateTask, onDe
         <div className="mb-6">
           <h3 className="font-semibold text-slate-600 mb-2">Follow-ups</h3>
           <div className="space-y-2">
-            {task.followUps.map(fu => (
+            {task.follow_ups.map(fu => (
               <div key={fu.id} className="flex items-center gap-2 group">
                 <input
                   type="checkbox"

@@ -1,4 +1,3 @@
-
 export interface Document {
   id: string;
   name: string;
@@ -19,16 +18,17 @@ export enum TaskStatus {
 
 export interface Task {
   id:string;
+  user_id: string;
   title: string;
   details: string;
-  projectId: string;
+  project_id: string;
   status: TaskStatus;
-  createdAt: string;
-  closedAt?: string;
+  created_at: string;
+  closed_at?: string;
   documents: Document[];
-  followUps: FollowUp[];
+  follow_ups: FollowUp[];
   order: number;
-  isPriority?: boolean;
+  is_priority?: boolean;
 }
 
 export enum ProjectStatus {
@@ -40,8 +40,9 @@ export enum ProjectStatus {
 
 export interface Project {
   id: string;
+  user_id: string;
   name: string;
-  parentId: string | null;
+  parent_id: string | null;
   status: ProjectStatus;
-  createdAt: string;
+  created_at: string;
 }

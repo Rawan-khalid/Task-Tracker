@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Project, ProjectStatus } from '../types';
 import { Icon } from './Icons';
@@ -7,13 +6,13 @@ interface ProjectViewProps {
   projects: Project[];
   selectedProjectId: string | null;
   onSelectProject: (id: string | null) => void;
-  onAddProject: (name: string, parentId: string | null) => void;
+  onAddProject: (name: string, parent_id: string | null) => void;
   onDeleteProject: (id: string) => void;
   onUpdateProject: (id: string, newName: string) => void;
   onUpdateProjectStatus: (id: string, status: ProjectStatus) => void;
   onAddTask: (title: string, projectId: string) => void;
   onReassignTask: (taskId: string, newProjectId: string) => void;
-  onReassignProject: (projectId: string, newParentId: string | null) => void;
+  onReassignProject: (projectId: string, newParent_id: string | null) => void;
   onCollapse: () => void;
 }
 
@@ -36,7 +35,7 @@ const sortProjects = (a: Project, b: Project): number => {
   if (statusComparison !== 0) {
     return statusComparison;
   }
-  return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
 };
 
 
@@ -75,7 +74,7 @@ const ProjectItem: React.FC<{
 
   const showExpanded = !!searchQuery || isExpanded;
 
-  const childProjects = allProjects.filter(p => p.parentId === project.id).sort(sortProjects);
+  const childProjects = allProjects.filter(p => p.parent_id === project.id).sort(sortProjects);
   const hasChildren = childProjects.length > 0;
 
   useEffect(() => {
@@ -365,15 +364,17 @@ export const ProjectView: React.FC<ProjectViewProps> = ({ projects, onCollapse, 
     const displayIds = new Set<string>(matchingIds);
     for (const id of matchingIds) {
       let current = projectsById.get(id);
-      while (current && current.parentId) {
-        displayIds.add(current.parentId);
-        current = projectsById.get(current.parentId);
+      while (current && current.parent_id) {
+        displayIds.add(current.parent_id);
+        current = projectsById.get(current.parent_id);
       }
     }
     return projects.filter(p => displayIds.has(p.id));
   }, [searchQuery, projects, projectsById]);
   
-  const rootProjects = filteredProjects.filter(p => p.parentId === null).sort(sortProjects);
+  const rootProjects = filteredProjects.filter(p => p.parent_id === null).sort(sortProjects);
+
+  const isEmpty = rootProjects.length === 0 && !searchQuery.trim();
 
   const handleAddProject = (e: React.FormEvent) => {
     e.preventDefault();
@@ -404,7 +405,6 @@ export const ProjectView: React.FC<ProjectViewProps> = ({ projects, onCollapse, 
     e.stopPropagation();
     setIsRootDragOver(false);
     const projectId = e.dataTransfer.getData('projectId');
-    // FIX: Corrected a typo in `e.dataTransfer`.
     const taskId = e.dataTransfer.getData('taskId');
     if (projectId && !taskId) { // It's a project, not a task
         props.onReassignProject(projectId, null);
@@ -482,7 +482,7 @@ export const ProjectView: React.FC<ProjectViewProps> = ({ projects, onCollapse, 
           </form>
         )}
       </div>
-       <button onClick={() => setIsAdding(true)} className="mt-4 flex items-center justify-center gap-2 w-full p-2 text-sm text-slate-600 rounded-lg hover:bg-slate-200 transition-colors">
+       <button onClick={() => setIsAdding(true)} className={`mt-4 flex items-center justify-center gap-2 w-full p-2 text-sm font-semibold rounded-lg transition-colors ${isEmpty ? 'bg-blue-600 text-white hover:bg-blue-700 shadow' : 'text-slate-600 hover:bg-slate-200'}`}>
         <Icon name="plus" className="w-4 h-4" />
         Add Project
       </button>
