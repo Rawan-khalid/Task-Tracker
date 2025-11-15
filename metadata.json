@@ -1,0 +1,5 @@
+{
+  "name": "ADHD PM Task Tracker",
+  "description": "A task and follow-up tracker designed for product managers with ADHD. It helps organize tasks into projects, track time, and manage related documents and follow-ups with a clean, focus-oriented interface.",
+  "requestFramePermissions": []
+}
